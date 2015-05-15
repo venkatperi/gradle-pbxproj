@@ -1,0 +1,7 @@
+#!/bin/bash
+filename=$1
+password=$2
+openssl genrsa -des3 -out $filename.key -passout pass:$password 1024
+openssl req -new -key $filename.key -out $filename.csr -passin pass:$password -config fields.config
+openssl x509 -req -days 365 -in $filename.csr -signkey $filename.key -out $filename.crt -passin pass:$password
+openssl x509 -in $filename.crt -outform der -out $filename.der

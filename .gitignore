@@ -1,0 +1,8 @@
+*.iml
+Gemfile.lock
+build/
+.lazybones/
+.idea
+.DS_Store
+userHome/
+.gradle/
