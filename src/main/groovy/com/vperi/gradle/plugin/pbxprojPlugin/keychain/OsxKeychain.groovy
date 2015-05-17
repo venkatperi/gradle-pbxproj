@@ -25,7 +25,7 @@ public class OsxKeychain implements Keychain {
 
   void create() {
     assert password, "Password can't be null"
-    exec "create-keychain", [ p: password ], fileName
+    exec "createProject-keychain", [ p: password ], fileName
   }
 
   @Override

@@ -17,12 +17,12 @@ public class Command {
   List env = null
 
   public String exec( String command, Map options, String... args ) {
-   exec command, options, args.toList()
+    exec command, options, args.toList()
   }
 
   public String exec( String command, Map options, List args ) {
     def cmd = [ executable, command ]
-    cmd.addAll options.collect { k, v -> "-$k $v" }
+    cmd.addAll options.collect { k, v -> "${dash k}$k $v" }
     cmd.addAll args
     def ( ret, output ) = Helper.exec( cmd.join( " " ), env, workingDir )
     if ( ret ) throw new RuntimeException( output as String )
@@ -37,9 +37,14 @@ public class Command {
     output
   }
 
+  private static String dash( String name ) {
+    name.length() <= 1 ? "-" : "--"
+  }
+
   class Helper {
 
     static def exec( final String cmd, List<String> env, File workingDir ) throws IOException, InterruptedException {
+      println cmd
       def bout = new ByteArrayOutputStream()
       def process = Runtime.runtime.exec( cmd, env as String[], workingDir )
 

@@ -1,9 +1,6 @@
 package com.vperi.groovy.utils
 
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardCopyOption
+import java.nio.file.*
 
 /**
  * ResourceUtils.groovy
@@ -19,7 +16,14 @@ class ResourceUtils {
   static def copyJarFiles( Class klass, String sourceDir, String outputDir, Closure select = null ) {
     def location = klass.protectionDomain.codeSource.location.toURI().path
     def uri = URI.create( "jar:file:$location" )
-    def fs = FileSystems.newFileSystem( uri, [ : ] )
+    def fs
+    try {
+      fs = FileSystems.newFileSystem( uri, [ : ] )
+    }
+    catch ( FileSystemAlreadyExistsException ignored ) {
+      fs = FileSystems.getFileSystem( uri )
+    }
+
     def from = fs.getPath( sourceDir )
     def to = new File( outputDir ).toPath()
 
@@ -37,7 +41,14 @@ class ResourceUtils {
         if ( Files.isDirectory( src ) ) {
           Files.createDirectories( dest )
         } else {
-          Files.copy( src, dest, StandardCopyOption.REPLACE_EXISTING )
+          try {
+//            FileUtils.copyFile(src.toFile(  ), dest.toFile(  ))
+            Files.copy( src, dest, StandardCopyOption.REPLACE_EXISTING )
+          }
+          //see http://bugs.java.com/bugdatabase/view_bug.do;jsessionid=53ede10dc8803210b03577eac43?bug_id=6519463
+          catch ( Exception e ) {
+            println e
+          }
         }
       }
     }

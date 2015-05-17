@@ -15,9 +15,13 @@ repositories {
 
 dependencies {
   testCompile "org.spockframework:spock-core:1.0-groovy-2.3"
+//  testCompile 'com.athaydes:spock-reports:1.2.5'
+
   compile localGroovy()
   compile gradleApi()
   compile 'com.github.javafaker:javafaker:0.5'
+  compile 'commons-io:commons-io:2.4'
+
 }
 
 sourceSets.main.java.srcDirs = [ ]

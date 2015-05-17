@@ -1,4 +1,4 @@
-package com.vperi.gradle.plugin.pbxprojPlugin
+package com.vperi.gradle.tasks
 
 import org.gradle.api.internal.AbstractTask
 import org.gradle.api.tasks.TaskAction

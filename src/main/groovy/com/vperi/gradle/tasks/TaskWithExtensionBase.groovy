@@ -2,6 +2,7 @@ package com.vperi.gradle.tasks
 
 import com.vperi.gradle.extension.ExtensionBase
 import org.gradle.api.internal.AbstractTask
+
 /**
  * TaskWithExtensionBase.groovy
  *
@@ -13,6 +14,10 @@ import org.gradle.api.internal.AbstractTask
 class TaskWithExtensionBase<T extends ExtensionBase> extends AbstractTask {
   @Lazy File baseDir = project.file( "build/$ext.baseName" )
   T ext
+
+  TaskWithExtensionBase() {
+    super()
+  }
 
   def propertyMissing( String name ) {
     ext."$name"

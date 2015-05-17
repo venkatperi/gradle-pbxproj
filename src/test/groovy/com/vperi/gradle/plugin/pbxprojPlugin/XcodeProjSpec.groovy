@@ -1,5 +1,6 @@
 package com.vperi.gradle.plugin.pbxprojPlugin
 
+import com.vperi.xcodeproj.XcodeProj
 import spock.lang.Specification
 
 /**
@@ -15,7 +16,7 @@ class XcodeProjSpec extends Specification {
   def scriptDir = new File( "../../src/main/resources/scripts" )
 
   def setupSpec() {
-    root.deleteDir(  )
+    root.deleteDir()
     root.mkdirs()
   }
 
@@ -24,17 +25,27 @@ class XcodeProjSpec extends Specification {
     def proj = new XcodeProj( projectName: "testProj", workingDir: root, scriptDir: scriptDir )
 
     when:
-    proj.create()
+    proj.createProject()
 
     then:
     noExceptionThrown()
 
+    and:
     when:
-    project.create()
+    project.createProject()
 
     then:
-    thrown(Exception)
+    thrown( Exception )
   }
 
+  def "get setting"() {
+    given:
+    def proj = new XcodeProj( projectName: "testProj", workingDir: root, scriptDir: scriptDir )
 
+    when:
+    def value = proj.buildSetting( null, "Debug", "CLANG_CXX_LIBRARY" )
+
+    then:
+    value.trim().replace( '"', "" ) == "libc++"
+  }
 }

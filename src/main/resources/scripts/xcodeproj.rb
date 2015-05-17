@@ -5,11 +5,12 @@ program :version, '0.1.0'
 program :description, 'xcodeproj commands'
 
 command :'project create' do |c|
-  c.syntax = 'xcodeproj project create'
+  c.syntax = 'xcodeproj project createProject'
   c.description = 'Create a new project'
   c.option '--project PROJECT', String, 'Name of project'
+  c.option '--clobber', String, 'Clobber an existing project'
   c.action do |args, options|
-    raise "Project exists" if File.exists?(options.project)
+    raise 'Project exists' if File.exists?(options.project) && options.clobber.nil?
     project = Xcodeproj::Project.new(options.project)
     project.save
   end
@@ -62,7 +63,7 @@ command :'targets list' do |c|
   c.action do |args, o|
     project = Xcodeproj::Project.open(o.project)
     p project.targets.collect { |t| t.name }.join(' ')
-    p project.root_object.build_configuration_list.build_configurations[0].build_settings["CLANG_WARN_ENUM_CONVERSION"]
+    p project.root_object.build_configuration_list.build_configurations[0].build_settings['CLANG_WARN_ENUM_CONVERSION']
   end
 end
 

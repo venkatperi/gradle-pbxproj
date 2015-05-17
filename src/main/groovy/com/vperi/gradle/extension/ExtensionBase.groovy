@@ -27,4 +27,13 @@ class ExtensionBase {
     def ext = [ "ext", "extension" ].find { name.endsWith it }
     ext ? name.substring( 0, name.length() - ext.length() ) : name
   }
+
+  def methodMissing( String name, args ) {
+    if ( name in [ "name", "project" ] ) return
+    if ( this.properties.containsKey( name ) ) {
+      this."$name" = args[0]
+      return
+    }
+    throw new MissingMethodException( name, null )
+  }
 }
