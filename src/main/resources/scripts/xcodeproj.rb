@@ -73,6 +73,7 @@ command :'target add files' do |c|
   c.option '--project PROJECT', String, 'Name of project'
   c.option '--target TARGET', String, 'Name of target'
   c.option '--path PATH', String, 'Path to the group where files will be added'
+  c.option '--phase PHASE', String, 'Also add to this build phase (headers, sources, frameworks, resources, copyFiles, shellScript)'
   c.option '--files FILES', Array, 'Files to add'
   c.action do |args, o|
     project = Xcodeproj::Project.open(o.project)
@@ -82,7 +83,12 @@ command :'target add files' do |c|
     refs = o.files.collect do |file|
       group.new_file file
     end
-    target.add_file_references refs
+    if o.phase == 'sources'
+      target.add_file_references refs
+    else
+      target.add_resources refs
+    end
+
     project.save
   end
 end

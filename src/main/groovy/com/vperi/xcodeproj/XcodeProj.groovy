@@ -98,16 +98,17 @@ class XcodeProj {
    * @param files
    * @return
    */
-  def addFilesToTarget( String target, String groupPath, String... files ) {
+  def addFilesToTarget( String target, String groupPath, BuildPhase phase, String... files ) {
     exec "target add files", [
         project: "${projectName}.xcodeproj",
         target: target,
         path: groupPath,
+        phase: phase.toString().toLowerCase(),
         files: files.join( "," ) ]
   }
 
-  def addFilesToTarget( String target, String groupPath, List<String> files ) {
-    addFilesToTarget( target, groupPath, files.toArray() as String[] )
+  def addFilesToTarget( String target, String groupPath, BuildPhase phase, List<String> files ) {
+    addFilesToTarget( target, groupPath, phase, files.toArray() as String[] )
   }
 
   /**

@@ -22,12 +22,15 @@ class ResourceUtils {
     }
     catch ( FileSystemAlreadyExistsException ignored ) {
       fs = FileSystems.getFileSystem( uri )
+      fs.close()
+      fs = FileSystems.newFileSystem( uri, [ : ] )
     }
 
     def from = fs.getPath( sourceDir )
     def to = new File( outputDir ).toPath()
 
     copyFiles from, to, select
+    fs.close()
   }
 
   static def copyFiles( File from, File to, Closure select = null ) {
@@ -42,7 +45,6 @@ class ResourceUtils {
           Files.createDirectories( dest )
         } else {
           try {
-//            FileUtils.copyFile(src.toFile(  ), dest.toFile(  ))
             Files.copy( src, dest, StandardCopyOption.REPLACE_EXISTING )
           }
           //see http://bugs.java.com/bugdatabase/view_bug.do;jsessionid=53ede10dc8803210b03577eac43?bug_id=6519463

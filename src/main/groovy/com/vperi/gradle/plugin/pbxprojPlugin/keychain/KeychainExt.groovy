@@ -1,7 +1,7 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.keychain
 
 import com.vperi.gradle.extension.ExtensionBase
-import groovy.transform.Canonical
+import groovy.transform.InheritConstructors
 
 /**
  * Certificate.groovy
@@ -11,7 +11,7 @@ import groovy.transform.Canonical
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-@Canonical
+@InheritConstructors
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 class KeychainExt extends ExtensionBase {
   String password

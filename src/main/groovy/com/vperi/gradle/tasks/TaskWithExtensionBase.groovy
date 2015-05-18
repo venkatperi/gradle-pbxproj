@@ -22,4 +22,8 @@ class TaskWithExtensionBase<T extends ExtensionBase> extends AbstractTask {
   def propertyMissing( String name ) {
     ext."$name"
   }
+
+  @SuppressWarnings( "GroovyUnusedDeclaration" )
+  def afterEvaluate() {
+  }
 }

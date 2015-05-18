@@ -15,3 +15,4 @@ public enum TargetType {
   StaticLibrary,
   DynamicLibrary
 }
+

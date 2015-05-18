@@ -1,11 +1,9 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.target
-
 import com.vperi.gradle.extension.ExtensionBase
 import com.vperi.xcodeproj.Language
 import com.vperi.xcodeproj.Platform
 import com.vperi.xcodeproj.TargetType
-import groovy.transform.Canonical
-
+import groovy.transform.InheritConstructors
 /**
  * TargetExt.groovy
  *
@@ -15,11 +13,11 @@ import groovy.transform.Canonical
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-@Canonical
+@InheritConstructors
 class TargetExt extends ExtensionBase {
   TargetType type
   Platform platform
   Language language
   String deploymentTarget
-  String configuration
+  String buildConfiguration
 }

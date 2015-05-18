@@ -1,8 +1,6 @@
 package com.vperi.gradle.plugin.pbxprojPlugin
-
 import com.vperi.gradle.extension.ExtensionBase
-import groovy.transform.Canonical
-
+import groovy.transform.InheritConstructors
 /**
  * PbxprojExt.groovy
  *
@@ -12,7 +10,7 @@ import groovy.transform.Canonical
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-@Canonical
+@InheritConstructors
 class PbxprojExt extends ExtensionBase {
 
   @Override

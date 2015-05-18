@@ -3,6 +3,7 @@ package com.vperi.gradle.extension
 import groovy.transform.Canonical
 import org.gradle.api.NamedDomainObjectFactory
 import org.gradle.api.Project
+
 /**
  * ${file.filename} -- ${file.qualifiedClassName}*
  * Copyright © 2015 venkat
@@ -18,8 +19,11 @@ abstract class NamedObjectFactoryBase<T extends ExtensionBase> implements NamedD
 
   @Override
   T create( String name ) {
-    def ext = klass.newInstance( project: project, name: name ) as T
-    project.afterEvaluate { addTasksFor ext }
+    def ext = klass.newInstance( name, project ) as T
+    project.afterEvaluate {
+      assert project.state.executed
+      addTasksFor ext
+    }
     ext
   }
 

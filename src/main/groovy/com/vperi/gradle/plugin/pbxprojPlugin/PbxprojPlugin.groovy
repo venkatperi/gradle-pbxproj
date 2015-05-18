@@ -2,6 +2,7 @@ package com.vperi.gradle.plugin.pbxprojPlugin
 
 import com.vperi.gradle.plugin.pbxprojPlugin.cert.CertificateExt
 import com.vperi.gradle.plugin.pbxprojPlugin.cert.CertificateFactory
+import com.vperi.gradle.plugin.pbxprojPlugin.infoPlist.InfoPlistFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.keychain.KeychainExt
 import com.vperi.gradle.plugin.pbxprojPlugin.keychain.KeychainFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
@@ -24,6 +25,7 @@ class PbxprojPlugin implements Plugin<Project> {
 
   void apply( Project project ) {
     this.project = project
+    project.buildDir.mkdirs()
 
     project.with {
       apply plugin: "java-base"
@@ -42,7 +44,8 @@ class PbxprojPlugin implements Plugin<Project> {
             it.value[ 1 ] as NamedDomainObjectFactory )
       }
 
-      extensions.create( "pbxproj", PbxprojExt )
+//      extensions.create( "pbxproj", PbxprojExt )
+      extensions.add( "infoPlist", new InfoPlistFactory( project: project ).create( "infoPlist" ) )
     }
 
     createTasks()
@@ -53,8 +56,6 @@ class PbxprojPlugin implements Plugin<Project> {
     def pwd = System.getProperty( "user.dir" )
 
     project.with {
-
-      file("build").mkdirs()  //create build dir, just in case
 
       def copyScripts = task( "copyScripts" ) {
         def location = PbxprojPlugin.protectionDomain.codeSource.location.toURI().path

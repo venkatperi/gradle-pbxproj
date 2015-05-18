@@ -1,6 +1,7 @@
 package com.vperi.groovy.utils
 
 import groovy.transform.TupleConstructor
+import groovy.util.logging.Slf4j
 
 /**
  * Command.groovy
@@ -11,6 +12,7 @@ import groovy.transform.TupleConstructor
  * of the MIT license.  See the LICENSE file for details.
  */
 @TupleConstructor
+@Slf4j
 public class Command {
   String executable
   File workingDir
@@ -44,7 +46,7 @@ public class Command {
   class Helper {
 
     static def exec( final String cmd, List<String> env, File workingDir ) throws IOException, InterruptedException {
-      println cmd
+      log.debug "Executing command: $cmd (working dir $workingDir"
       def bout = new ByteArrayOutputStream()
       def process = Runtime.runtime.exec( cmd, env as String[], workingDir )
 

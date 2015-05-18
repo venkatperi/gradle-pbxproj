@@ -1,6 +1,6 @@
 package com.vperi.gradle.extension
 
-import groovy.transform.Canonical
+import groovy.transform.InheritConstructors
 /**
  * UppercasePropertyContainer.groovy
  *
@@ -9,6 +9,6 @@ import groovy.transform.Canonical
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-@Canonical
+@InheritConstructors
 class UppercasePropertyContainer extends PropertyContainer {
 }

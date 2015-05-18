@@ -15,19 +15,28 @@ repositories {
 
 dependencies {
   testCompile "org.spockframework:spock-core:1.0-groovy-2.3"
-//  testCompile 'com.athaydes:spock-reports:1.2.5'
 
   compile localGroovy()
   compile gradleApi()
   compile 'com.github.javafaker:javafaker:0.5'
-  compile 'commons-io:commons-io:2.4'
-
+  compile 'com.googlecode.plist:dd-plist:1.16'
 }
 
 sourceSets.main.java.srcDirs = [ ]
 sourceSets.main.groovy.srcDirs += [ "src/main/java" ]
 
+task fatJar(type: Jar) {
+  manifest { 
+    attributes 'Implementation-Title': 'Gradle Jar File Example',  
+    'Implementation-Version': version 
+  }
+  baseName = project.name + '-all'
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  with jar
+}
+
 test {
+  enabled = false
   testLogging {
     showStandardStreams = true
     exceptionFormat = "full"
