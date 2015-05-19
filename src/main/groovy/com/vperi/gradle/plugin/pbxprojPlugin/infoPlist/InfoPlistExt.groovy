@@ -20,6 +20,12 @@ import org.gradle.api.Project
 class InfoPlistExt extends PropertyContainer {
   TargetExt target
 
+  /**
+   *
+   * @param name
+   * @param project
+   * @param target -- the immediate parent of this object
+   */
   InfoPlistExt( String name, Project project, TargetExt target ) {
     super( name, project )
     this.target = target

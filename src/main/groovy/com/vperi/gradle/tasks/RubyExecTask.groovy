@@ -36,10 +36,11 @@ class RubyExecTask extends AbstractTask {
     this.args.addAll args.toList()
   }
 
-  def workingDir(File wd){
+  def workingDir( File wd ) {
     command.workingDir = wd
   }
-  def workingDir(String wd){
+
+  def workingDir( String wd ) {
     command.workingDir = project.file wd
   }
 }

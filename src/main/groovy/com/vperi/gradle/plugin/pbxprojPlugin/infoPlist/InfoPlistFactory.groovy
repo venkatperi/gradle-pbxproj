@@ -24,12 +24,16 @@ class InfoPlistFactory extends NamedObjectFactoryBase<InfoPlistExt> {
     new InfoPlistExt( name, project, target )
   }
 
+  /**
+   * Add tasks for this extension
+   * @param x - the extension
+   * @return
+   */
   def addTasksFor( InfoPlistExt x ) {
     project.with {
-      def n = target.name.capitalize(  )
-      def t = task( "target${n}CreateInfoPlist", type: CreateInfoPlistTask ) {
-        ext = x
-      }
+      def n = target.name.capitalize()
+      def t = _ "target${n}CreateInfoPlist", CreateInfoPlistTask, x
+
       def addFilesTask = tasks.findByPath( "target${n}AddFiles" )
       if ( addFilesTask ) {
         addFilesTask.dependsOn t

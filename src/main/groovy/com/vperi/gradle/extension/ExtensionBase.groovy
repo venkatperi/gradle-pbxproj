@@ -11,11 +11,16 @@ import org.gradle.api.Project
  * of the MIT license.  See the LICENSE file for details.
  */
 class ExtensionBase {
-  @Lazy File baseDir = project.file( "build/$baseName" )
-  @Lazy String basePath = project.file( "$baseDir.path/$name" ).path
   String name
   Project project
+  @Lazy protected File baseDir = project.file( "build/$baseName" )
+  @Lazy protected String basePath = project.file( "$baseDir.path/$name" ).path
 
+  /**
+   * Constructor
+   * @param name -- name of this extension object
+   * @param project -- our project
+   */
   ExtensionBase( String name, Project project ) {
     this.name = name
     this.project = project

@@ -25,6 +25,7 @@ public class DefaultSwiftSourceSet extends DefaultSourceSetBase {
         this
     }
 
+    @SuppressWarnings( "GroovyUnusedDeclaration" )
     public SourceDirectorySet getAllSwift() {
         allSourceDirSet
     }

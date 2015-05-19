@@ -27,6 +27,12 @@ abstract class NamedObjectFactoryBase<T extends ExtensionBase> implements NamedD
     ext
   }
 
+  def _( String name, Class klass, T x ) {
+    project.task( name, type: klass ) {
+      ext = x
+    }
+  }
+
   def createInstance( String name ) {
     klass.newInstance( name, project ) as T
   }

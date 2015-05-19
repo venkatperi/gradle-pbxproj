@@ -22,26 +22,26 @@ class TargetFactory extends NamedObjectFactoryBase<TargetExt> {
   def addTasksFor( TargetExt x ) {
     project.with {
       def tName = x.name.capitalize()
-      def createTask = task( "targetCreate$tName", type: CreateTargetTask ) {
-        ext = x
-      }
 
-      def addFilesTask = task( "target${tName}AddFiles", type: TargetAddFilesTask ) {
-        ext = x
-      }
+      def createTask = _ "targetCreate$tName", CreateTargetTask, x
+      def addFilesTask = _ "target${tName}AddFiles", TargetAddFilesTask, x
 
       addFilesTask.dependsOn createTask
       tasks[ "targets" ].dependsOn addFilesTask
 
-      def conv = project.convention.getPlugin( JavaPluginConvention )
-      def ss = conv.sourceSets.create tName
-      PbxprojPlugin.configureSourceSetDefaults project, ss, "objc", DefaultObjcSourceSet
-      PbxprojPlugin.configureSourceSetDefaults project, ss, "swift", DefaultSwiftSourceSet
-
-      ss.resources.srcDirs( [ "src", "build/gen" ].collect { prefix ->
-        "$prefix/$tName/resources"
-      }.toArray() )
+      configureSourceSets tName
     }
+  }
+
+  def configureSourceSets( String name ) {
+    def conv = project.convention.getPlugin( JavaPluginConvention )
+    def ss = conv.sourceSets.create name
+    PbxprojPlugin.configureSourceSetDefaults project, ss, "objc", DefaultObjcSourceSet
+    PbxprojPlugin.configureSourceSetDefaults project, ss, "swift", DefaultSwiftSourceSet
+
+    ss.resources.srcDirs( [ "src", "build/gen" ].collect { prefix ->
+      "$prefix/$name/resources"
+    }.toArray() )
   }
 }
 

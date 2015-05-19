@@ -81,8 +81,12 @@ command :'target add files' do |c|
     raise 'Target not found' if target.nil?
     group = project.main_group.find_subpath o.path, true
     refs = o.files.collect do |file|
-      group.new_file file
+      ref = group.files.find { |ref| ref.real_path == file }
+      unless ref
+        group.new_file file
+      end
     end
+
     if o.phase == 'sources'
       target.add_file_references refs
     else
