@@ -1,8 +1,12 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.target
 
-import com.vperi.gradle.plugin.pbxprojPlugin.infoPlist.CreateInfoPlistTask
 import com.vperi.gradle.tasks.XcodeProjTaskBase
+import com.vperi.groovy.utils.StringExtension
 import com.vperi.xcodeproj.BuildPhase
+import groovy.util.logging.Slf4j
+import org.gradle.api.file.FileTree
+import org.gradle.api.file.FileVisitDetails
+import org.gradle.api.internal.file.DefaultSourceDirectorySet
 import org.gradle.api.tasks.TaskAction
 
 import java.nio.file.Path
@@ -15,36 +19,27 @@ import java.nio.file.Path
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+@Slf4j
 class TargetAddFilesTask extends XcodeProjTaskBase<TargetExt> {
+
+  @Lazy def rootPath = project.rootDir.toPath()
+  final def infoPlistFileName = "info.plist"
+  String infoPlistFile = null
 
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   void exec() {
-    def rootPath = project.rootDir.toPath()
     ext.with {
-      def infoPlistFile = "info.plist"
-      def configName = "main"
-      def config = project.sourceSets."$configName"
-
-      def infoPlist = null
       Map<String, List<String>> files = [ : ]
-      [ "objc", "swift", "resources" ].each {
-        config."$it".visit {
-          Path path = it.file.toPath()
-          def relative = rootPath.relativize( path )
-          def group = relative.parent.toString()
-          if ( !files.containsKey( group ) ) files[ group ] = [ ]
-          files[ group ].add it.file.path
-          if ( path.fileName.toString().toLowerCase() == infoPlistFile ) {
-            infoPlist = path.toString()
-          }
-        }
-      }
+      def n = ext.name.capitalize()
 
-      def plistTask = project.tasks.findByPath( "createInfoPlist" ) as CreateInfoPlistTask
-      if ( !infoPlist && plistTask ) {
-        infoPlist = plistTask.outputFile.path
-        files[ "src/main/resources" ].add infoPlist
+      DefaultSourceDirectorySet
+      //      def conv = project.convention.getPlugin JavaPluginConvention
+      [ "main", n ].each { configName ->
+        def config = project.sourceSets."$configName"
+        [ "objc", "swift", "resources" ].each {
+          files.putAll getFileList( config."$it" )
+        }
       }
 
       files.each { k, v ->
@@ -52,11 +47,30 @@ class TargetAddFilesTask extends XcodeProjTaskBase<TargetExt> {
         xproj.addFilesToTarget name, k, phase, v
       }
 
-
-      if ( infoPlist ) {
-        xproj.buildSetting( name, buildConfiguration, "INFOPLIST_FILE", infoPlist )
+      if ( infoPlistFile ) {
+        log.info "target: $ext.name, Info.plist: $infoPlistFile"
+        xproj.buildSetting( name, buildConfiguration, "INFOPLIST_FILE", infoPlistFile )
       }
     }
   }
+
+  def getFileList( FileTree set ) {
+    Map<String, List<String>> files = [ : ]
+    def n = ext.name.capitalize()
+
+    set.visit { FileVisitDetails f ->
+      if ( f.isDirectory() ) return
+      Path path = f.file.toPath()
+      String filePath = f.file.path
+      def relative = rootPath.relativize( path )
+      group = StringExtension.removePrefix( relative.parent.toString(), "build/" )
+      if ( !files.containsKey( group ) ) files[ group ] = [ ]
+      files[ group ].add filePath
+      if ( filePath.toLowerCase().contains( infoPlistFileName ) ) infoPlistFile = filePath
+    }
+    files
+  }
 }
+
+
 

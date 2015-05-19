@@ -19,12 +19,16 @@ abstract class NamedObjectFactoryBase<T extends ExtensionBase> implements NamedD
 
   @Override
   T create( String name ) {
-    def ext = klass.newInstance( name, project ) as T
+    def ext = createInstance( name )
     project.afterEvaluate {
       assert project.state.executed
       addTasksFor ext
     }
     ext
+  }
+
+  def createInstance( String name ) {
+    klass.newInstance( name, project ) as T
   }
 
   abstract def addTasksFor( T cert )

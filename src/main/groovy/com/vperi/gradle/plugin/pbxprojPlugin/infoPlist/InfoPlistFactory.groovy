@@ -1,7 +1,9 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.infoPlist
 
 import com.vperi.gradle.extension.NamedObjectFactoryBase
+import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
 import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 
 /**
  * ${file.filename} -- ${file.qualifiedClassName}*
@@ -12,17 +14,26 @@ import groovy.transform.Canonical
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @Canonical
+@Slf4j
 class InfoPlistFactory extends NamedObjectFactoryBase<InfoPlistExt> {
   Class klass = InfoPlistExt
+  TargetExt target
+
+  @Override
+  def createInstance( String name ) {
+    new InfoPlistExt( name, project, target )
+  }
 
   def addTasksFor( InfoPlistExt x ) {
     project.with {
-
-      def createTask = task( "createInfoPlist", type: CreateInfoPlistTask ) {
+      def n = target.name.capitalize(  )
+      def t = task( "target${n}CreateInfoPlist", type: CreateInfoPlistTask ) {
         ext = x
       }
-
-      tasks[ "pbxproj" ].dependsOn createTask
+      def addFilesTask = tasks.findByPath( "target${n}AddFiles" )
+      if ( addFilesTask ) {
+        addFilesTask.dependsOn t
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ class TargetsSpec extends Specification {
   def root = new File( "." )
 
   def setup() {
-    project = ProjectBuilder.builder().withProjectDir( root ).build()
+    project = ProjectBuilder.builder().build()
     project.with {
       apply plugin: "pbxproj"
     }
@@ -40,7 +40,7 @@ class TargetsSpec extends Specification {
     then:
     project.extensions.targets.Sample
     project.tasks.findByPath( "targetCreateSample" )
-    project.tasks.findByPath( "targetsCreate" )
+    project.tasks.findByPath( "targets" )
   }
 
   def "set target params"() {
@@ -64,5 +64,27 @@ class TargetsSpec extends Specification {
     project.extensions.targets.Sample.language == Language.Swift
     project.extensions.targets.Sample.platform == Platform.Ios
     project.extensions.targets.Sample.configuration == "Debug"
+  }
+
+  def "`targets` dir sets"() {
+    given:
+    project.with {
+      targets {
+        Sample {
+          type "Application"
+          language "Swift"
+          platform "Ios"
+          configuration "Debug"
+        }
+      }
+    }
+
+    when:
+    project.evaluate()
+
+    then:
+    project.extensions.targets.Sample
+    project.tasks.findByPath( "targetCreateSample" )
+    project.tasks.findByPath( "targets" )
   }
 }

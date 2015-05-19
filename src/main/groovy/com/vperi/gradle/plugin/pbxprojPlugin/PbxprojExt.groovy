@@ -1,6 +1,8 @@
 package com.vperi.gradle.plugin.pbxprojPlugin
+
 import com.vperi.gradle.extension.ExtensionBase
 import groovy.transform.InheritConstructors
+
 /**
  * PbxprojExt.groovy
  *

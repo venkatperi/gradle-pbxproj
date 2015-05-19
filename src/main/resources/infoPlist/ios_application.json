@@ -1,0 +1,32 @@
+{
+  "UIRequiredDeviceCapabilities": ["armv7"],
+  "CFBundleIdentifier": "com.template.$(PRODUCT_NAME:rfc1034identifier)",
+  "CFBundleInfoDictionaryVersion": "6.0",
+  "UIMainStoryboardFile": "Main",
+  "CFBundleVersion": "1",
+  "UILaunchStoryboardName": "LaunchScreen",
+  "CFBundleExecutable": "$(EXECUTABLE_NAME)",
+  "LSRequiresIPhoneOS": true,
+  "CFBundleShortVersionString": "1.0",
+  "UISupportedInterfaceOrientations": [
+    "UIInterfaceOrientationPortrait",
+    "UIInterfaceOrientationLandscapeLeft",
+    "UIInterfaceOrientationLandscapeRight"
+  ],
+  "UIStatusBarTintParameters": {
+    "UINavigationBar": {
+      "Style": "UIBarStyleDefault",
+      "Translucent": false
+    }
+  },
+  "CFBundleSignature": "????",
+  "CFBundlePackageType": "APPL",
+  "CFBundleDevelopmentRegion": "en",
+  "UISupportedInterfaceOrientations~ipad": [
+    "UIInterfaceOrientationPortrait",
+    "UIInterfaceOrientationPortraitUpsideDown",
+    "UIInterfaceOrientationLandscapeLeft",
+    "UIInterfaceOrientationLandscapeRight"
+  ],
+  "CFBundleName": "$(PRODUCT_NAME)"
+}

@@ -1,5 +1,7 @@
 package com.vperi.groovy.utils
 
+import groovy.util.logging.Slf4j
+
 import java.nio.file.*
 
 /**
@@ -11,6 +13,7 @@ import java.nio.file.*
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
+@Slf4j
 class ResourceUtils {
 
   static def copyJarFiles( Class klass, String sourceDir, String outputDir, Closure select = null ) {
@@ -49,7 +52,7 @@ class ResourceUtils {
           }
           //see http://bugs.java.com/bugdatabase/view_bug.do;jsessionid=53ede10dc8803210b03577eac43?bug_id=6519463
           catch ( Exception e ) {
-            println e
+            log.error e
           }
         }
       }

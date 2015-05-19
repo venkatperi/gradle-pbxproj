@@ -2,6 +2,7 @@ package com.vperi.xcodeproj
 
 import com.vperi.groovy.utils.Command
 import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 
 /**
  * XcodeProj.groovy
@@ -13,6 +14,7 @@ import groovy.transform.Canonical
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @Canonical( includes = [ "projectName", "scriptDir", "workingDir" ] )
+@Slf4j
 class XcodeProj {
   def command = new Command( executable: "ruby" )
   String projectName
@@ -99,6 +101,7 @@ class XcodeProj {
    * @return
    */
   def addFilesToTarget( String target, String groupPath, BuildPhase phase, String... files ) {
+    log.info "addFilesToTarget: $target, $groupPath, $phase, $files"
     exec "target add files", [
         project: "${projectName}.xcodeproj",
         target: target,

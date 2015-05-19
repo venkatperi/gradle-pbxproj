@@ -15,7 +15,7 @@ import org.gradle.api.tasks.TaskAction
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 class CreateInfoPlistTask extends TaskWithExtensionBase<InfoPlistExt> {
-  @Lazy def outputFile = project.file( "build/resources/Info.plist" )
+  @Lazy def outputFile = project.file( "build/gen/${ext.target.name}/resources/Info.plist" )
 
   @Override
   def afterEvaluate() {

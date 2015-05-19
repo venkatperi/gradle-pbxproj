@@ -16,6 +16,7 @@ public class DefaultSourceSetBase {
         def x = extensions.collect { "**/*.$it" }
         sourceDirSet = new DefaultSourceDirectorySet( name, fileResolver )
         sourceDirSet.filter.include x
+
         allSourceDirSet = new DefaultSourceDirectorySet( name, fileResolver )
         allSourceDirSet.source sourceDirSet
         allSourceDirSet.filter.include x

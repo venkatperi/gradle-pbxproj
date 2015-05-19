@@ -1,0 +1,16 @@
+{
+  "CFBundleName": "$(PRODUCT_NAME)",
+  "CFBundleIdentifier": "com.template.$(PRODUCT_NAME:rfc1034identifier)",
+  "CFBundleInfoDictionaryVersion": "6.0",
+  "CFBundleVersion": "1",
+  "CFBundleExecutable": "$(EXECUTABLE_NAME)",
+  "NSPrincipalClass": "NSApplication",
+  "CFBundlePackageType": "APPL",
+  "CFBundleIconFile": "",
+  "CFBundleSignature": "????",
+  "NSMainNibFile": "MainMenu",
+  "LSMinimumSystemVersion": "$(MACOSX_DEPLOYMENT_TARGET)",
+  "CFBundleDevelopmentRegion": "en",
+  "NSHumanReadableCopyright": "Copyright © 2015 Template Inc. All rights reserved.",
+  "CFBundleShortVersionString": "1.0"
+}

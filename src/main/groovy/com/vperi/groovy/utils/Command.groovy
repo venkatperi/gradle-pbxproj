@@ -46,7 +46,7 @@ public class Command {
   class Helper {
 
     static def exec( final String cmd, List<String> env, File workingDir ) throws IOException, InterruptedException {
-      log.debug "Executing command: $cmd (working dir $workingDir"
+      log.info "Executing command: $cmd (working dir $workingDir"
       def bout = new ByteArrayOutputStream()
       def process = Runtime.runtime.exec( cmd, env as String[], workingDir )
 

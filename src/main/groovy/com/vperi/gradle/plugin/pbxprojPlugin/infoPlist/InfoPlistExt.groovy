@@ -1,7 +1,11 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.infoPlist
 
 import com.vperi.gradle.extension.PropertyContainer
-import groovy.transform.InheritConstructors
+import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
+import groovy.json.JsonSlurper
+import groovy.transform.Memoized
+import groovy.util.logging.Slf4j
+import org.gradle.api.Project
 
 /**
  * InfoPlistExt.groovy
@@ -12,30 +16,30 @@ import groovy.transform.InheritConstructors
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-@InheritConstructors
+@Slf4j
 class InfoPlistExt extends PropertyContainer {
-  @Lazy Map defaults = [
-      CFBundleName: "\$(PRODUCT_NAME)",
-      CFBundleIdentifier: "${project.group}.\$(PRODUCT_NAME:rfc1034identifier)",
-      CFBundleInfoDictionaryVersion: "6.0",
-      CFBundleVersion: "1",
-      CFBundleExecutable: "\$(EXECUTABLE_NAME)",
-      NSPrincipalClass: "NSApplication",
-      CFBundlePackageType: "APPL",
-      CFBundleIconFile: "",
-      CFBundleSignature: "????",
-      NSMainNibFile: "MainMenu",
-      LSMinimumSystemVersion: "\$(MACOSX_DEPLOYMENT_TARGET)",
-      CFBundleDevelopmentRegion: "en",
-      NSHumanReadableCopyright: "Copyright © 2015. All rights reserved.",
-      CFBundleShortVersionString: "1.0"
-  ]
+  TargetExt target
+
+  InfoPlistExt( String name, Project project, TargetExt target ) {
+    super( name, project )
+    this.target = target
+  }
 
   @Override
   def afterEvaluate() {
     defaults.findAll { !properties.containsKey( it.key ) }.each { k, v ->
       properties[ k ] = v
     }
+  }
+
+  @Memoized
+  def getDefaults() {
+    def name = "${target.platform.toString().toLowerCase()}_${target.type.toString().toLowerCase()}"
+    log.info( "template name: $name" )
+    def slurper = new JsonSlurper()
+    def input = this.class.getResourceAsStream( "/infoPlist/${name}.json" )
+    assert input
+    slurper.parse input
   }
 }
 
