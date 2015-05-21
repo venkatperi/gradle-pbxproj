@@ -1,11 +1,10 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.infoPlist
 
-import com.vperi.gradle.extension.PropertyContainer
-import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
+import com.vperi.gradle.extension.PlistExt
 import groovy.json.JsonSlurper
+import groovy.transform.InheritConstructors
 import groovy.transform.Memoized
 import groovy.util.logging.Slf4j
-import org.gradle.api.Project
 
 /**
  * InfoPlistExt.groovy
@@ -16,36 +15,23 @@ import org.gradle.api.Project
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
+@InheritConstructors
 @Slf4j
-class InfoPlistExt extends PropertyContainer {
-  TargetExt target
-
-  /**
-   *
-   * @param name
-   * @param project
-   * @param target -- the immediate parent of this object
-   */
-  InfoPlistExt( String name, Project project, TargetExt target ) {
-    super( name, project )
-    this.target = target
-  }
+class InfoPlistExt extends PlistExt {
 
   @Override
-  def afterEvaluate() {
-    defaults.findAll { !properties.containsKey( it.key ) }.each { k, v ->
-      properties[ k ] = v
-    }
+  Map getDefaultProperties() {
+    doGetDefaultProperties()
   }
 
   @Memoized
-  def getDefaults() {
-    def name = "${target.platform.toString().toLowerCase()}_${target.type.toString().toLowerCase()}"
+  Map doGetDefaultProperties() {
+    def name = "${parent.platform.toString().toLowerCase()}_${parent.type.toString().toLowerCase()}"
     log.info( "template name: $name" )
     def slurper = new JsonSlurper()
     def input = this.class.getResourceAsStream( "/infoPlist/${name}.json" )
-    assert input
-    slurper.parse input
+    def items = input ? slurper.parse( input ) as Map : [ : ]
+    items
   }
 }
 

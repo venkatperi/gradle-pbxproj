@@ -61,14 +61,14 @@ class XcodeProj {
    * @param deploymentTarget
    * @return
    */
-  def createTarget( String name, TargetType type, Platform platform, Language language,
+  def createTarget( String name, String type, String platform, String language,
       String deploymentTarget ) {
     def options = [
         project: "${projectName}.xcodeproj",
         name: name,
-        type: type.name().toLowerCase(),
-        platform: platform.name().toLowerCase(),
-        language: language.name().toLowerCase() ]
+        type: type.toLowerCase(),
+        platform: platform.toLowerCase(),
+        language: language.toLowerCase() ]
     if ( deploymentTarget ) {
       options.deploymentTarget = deploymentTarget
     }
@@ -110,6 +110,14 @@ class XcodeProj {
         files: files.join( "," ) ]
   }
 
+  /**
+   * Add files to target
+   * @param target
+   * @param groupPath
+   * @param phase
+   * @param files
+   * @return
+   */
   def addFilesToTarget( String target, String groupPath, BuildPhase phase, List<String> files ) {
     addFilesToTarget( target, groupPath, phase, files.toArray() as String[] )
   }
@@ -137,5 +145,22 @@ class XcodeProj {
     }
 
     exec "build setting", options
+  }
+
+  /**
+   *  Adds a file reference for one or more system framework to the project
+   *  if needed and adds them to the Frameworks build phases.
+   * @param target
+   * @param frameworks
+   * @return
+   */
+  def addSystemFrameworkToTarget( String target, List<String> frameworks ) {
+    def options = [
+        project: "${projectName}.xcodeproj",
+        target: target,
+        frameworks: frameworks.join( "," )
+    ]
+
+    exec "target add system frameworks", options
   }
 }

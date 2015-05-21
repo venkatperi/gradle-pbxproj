@@ -3,7 +3,7 @@ package com.vperi.gradle.extension
 import groovy.transform.InheritConstructors
 
 /**
- * UppercasePropertyContainer.groovy
+ * ResourceExt.groovy
  *
  * Copyright © 2015 venkat
  *
@@ -12,5 +12,4 @@ import groovy.transform.InheritConstructors
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @InheritConstructors
-class UppercasePropertyContainer extends ExtensionBase {
-}
+class ResourceExt extends ExtensionBase {}

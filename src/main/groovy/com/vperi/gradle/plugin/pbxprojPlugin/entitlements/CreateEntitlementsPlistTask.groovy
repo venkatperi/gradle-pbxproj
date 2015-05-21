@@ -1,4 +1,4 @@
-package com.vperi.gradle.plugin.pbxprojPlugin.infoPlist
+package com.vperi.gradle.plugin.pbxprojPlugin.entitlements
 
 import com.vperi.gradle.extension.CreatePlistTaskBase
 /**
@@ -10,6 +10,6 @@ import com.vperi.gradle.extension.CreatePlistTaskBase
  * of the MIT license.  See the LICENSE file for details.
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-class CreateInfoPlistTask extends CreatePlistTaskBase<InfoPlistExt> {
-  String fileName = "Info.plist"
+class CreateEntitlementsPlistTask extends CreatePlistTaskBase<EntitlementsExt> {
+  String fileName = "entitlements.plist"
 }

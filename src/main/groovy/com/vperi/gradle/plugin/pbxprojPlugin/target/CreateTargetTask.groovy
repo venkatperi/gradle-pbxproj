@@ -16,8 +16,9 @@ class CreateTargetTask extends XcodeProjTaskBase<TargetExt> {
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   def exec() {
-    ext.with {
-      xproj.createTarget name, type, platform, language, deploymentTarget
+    xproj.createTarget ext.name, ext.type, ext.platform, ext.language, ext.deploymentTarget
+    if ( ext.systemFrameworks?.size() ) {
+      xproj.addSystemFrameworkToTarget ext.name, ext.systemFrameworks
     }
   }
 }

@@ -1,6 +1,6 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.cert
 
-import com.vperi.gradle.extension.NamedObjectFactoryBase
+import com.vperi.gradle.extension.ExtensionFactoryBase
 import groovy.transform.Canonical
 
 /**
@@ -11,14 +11,11 @@ import groovy.transform.Canonical
  * of the MIT license.  See the LICENSE file for details.
  */
 @Canonical
-class CertificateFactory extends NamedObjectFactoryBase<CertificateExt> {
+class CertificateFactory extends ExtensionFactoryBase<CertificateExt> {
   Class klass = CertificateExt
 
-  def addTasksFor( CertificateExt cert ) {
-    def createTask = project.task( "certCreate${cert.name.capitalize()}", type: MakeCertTask ) {
-      ext = cert
-    }
-    createTask.inputs.property "ext", cert
+  def afterEvaluate( CertificateExt cert ) {
+    _ "${cert.parent.prefix}CreateCertificate", CreateCertificateTask, cert
   }
 }
 

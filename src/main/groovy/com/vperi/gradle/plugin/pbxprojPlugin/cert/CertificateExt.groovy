@@ -1,6 +1,7 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.cert
+
 import com.vperi.gradle.extension.ExtensionBase
-import com.vperi.gradle.extension.PropertyContainer
+import com.vperi.gradle.extension.ResourceExt
 import groovy.transform.InheritConstructors
 /**
  * Certificate.groovy
@@ -12,10 +13,10 @@ import groovy.transform.InheritConstructors
  */
 @InheritConstructors
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-class CertificateExt extends ExtensionBase {
+class CertificateExt extends ResourceExt {
   String password
   boolean generateDN = true
-  PropertyContainer distinguishedName
+  ExtensionBase distinguishedName
   int days = 365
   int bits = 1024
 
@@ -28,7 +29,7 @@ class CertificateExt extends ExtensionBase {
   }
 
   def distinguishedName( Closure c ) {
-    distinguishedName = new PropertyContainer()
+    distinguishedName = new ExtensionBase()
     project.configure( distinguishedName, c )
     generateDN = false
   }

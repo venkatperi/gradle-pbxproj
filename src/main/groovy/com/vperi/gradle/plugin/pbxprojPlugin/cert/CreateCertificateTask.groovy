@@ -1,20 +1,21 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.cert
 
 import com.github.javafaker.Faker
-import com.vperi.groovy.utils.Command
-import com.vperi.gradle.tasks.TaskWithExtensionBase
+import com.vperi.gradle.extension.HasCommand
+import com.vperi.gradle.extension.ResourceTaskBase
 import groovy.text.SimpleTemplateEngine
 import org.gradle.api.tasks.TaskAction
 
 /**
  * Gradle task - Create a self signed certificate
  */
-class MakeCertTask extends TaskWithExtensionBase<CertificateExt> {
-  @Lazy Command command = new Command( executable: "openssl" )
+class CreateCertificateTask extends ResourceTaskBase<CertificateExt> implements HasCommand {
+
+  String executable = "openssl"
 
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
-  void exec() {
+  void action() {
     baseDir.mkdirs()
     genConfigFile()
     genRsa()
@@ -24,15 +25,15 @@ class MakeCertTask extends TaskWithExtensionBase<CertificateExt> {
   }
 
   def genRsa() {
-    command.exec "genrsa", [
+    exec "genrsa", [
         des3: "",
         out: "${ext.basePath}.key",
         passout: "pass:$ext.password"
-    ], ext.bits
+    ], [ ext.bits ]
   }
 
   def genReq() {
-    command.exec "req", [
+    exec "req", [
         new: "",
         key: "${ext.basePath}.key",
         out: "${ext.basePath}.csr",
@@ -41,7 +42,7 @@ class MakeCertTask extends TaskWithExtensionBase<CertificateExt> {
   }
 
   def genCert() {
-    command.exec "x509", [
+    exec "x509", [
         req: "",
         days: ext.days,
         in: "${ext.basePath}.csr",
@@ -52,7 +53,7 @@ class MakeCertTask extends TaskWithExtensionBase<CertificateExt> {
   }
 
   def toDer() {
-    command.exec "x509", [
+    exec "x509", [
         in: "${ext.basePath}.crt",
         outform: "der",
         out: "${ext.basePath}.der"

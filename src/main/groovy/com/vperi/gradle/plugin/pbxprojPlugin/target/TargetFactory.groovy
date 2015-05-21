@@ -1,6 +1,6 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.target
 
-import com.vperi.gradle.extension.NamedObjectFactoryBase
+import com.vperi.gradle.extension.ExtensionFactoryBase
 import com.vperi.gradle.plugin.pbxprojPlugin.DefaultObjcSourceSet
 import com.vperi.gradle.plugin.pbxprojPlugin.DefaultSwiftSourceSet
 import com.vperi.gradle.plugin.pbxprojPlugin.PbxprojPlugin
@@ -16,21 +16,17 @@ import org.gradle.api.plugins.JavaPluginConvention
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @Canonical
-class TargetFactory extends NamedObjectFactoryBase<TargetExt> {
+class TargetFactory extends ExtensionFactoryBase<TargetExt> {
   Class klass = TargetExt
 
-  def addTasksFor( TargetExt x ) {
-    project.with {
-      def tName = x.name.capitalize()
+  def afterEvaluate( TargetExt x ) {
+    def createTask = _ "${x.prefix}Create", CreateTargetTask, x
+    def addFilesTask = _ "${x.prefix}AddFiles", TargetAddFilesTask, x
 
-      def createTask = _ "targetCreate$tName", CreateTargetTask, x
-      def addFilesTask = _ "target${tName}AddFiles", TargetAddFilesTask, x
+    addFilesTask.dependsOn createTask
+    project.tasks[ "targets" ].dependsOn addFilesTask
 
-      addFilesTask.dependsOn createTask
-      tasks[ "targets" ].dependsOn addFilesTask
-
-      configureSourceSets tName
-    }
+    configureSourceSets x.name
   }
 
   def configureSourceSets( String name ) {

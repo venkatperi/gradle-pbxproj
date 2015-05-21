@@ -1,8 +1,10 @@
 package com.vperi.gradle.extension
 
 import groovy.transform.Canonical
+import groovy.util.logging.Slf4j
 import org.gradle.api.NamedDomainObjectFactory
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 /**
  * ${file.filename} -- ${file.qualifiedClassName}*
@@ -12,31 +14,35 @@ import org.gradle.api.Project
  * of the MIT license.  See the LICENSE file for details.
  */
 @Canonical
-abstract class NamedObjectFactoryBase<T extends ExtensionBase> implements NamedDomainObjectFactory<T> {
+@Slf4j
+abstract class ExtensionFactoryBase<T extends ExtensionBase> implements NamedDomainObjectFactory<T> {
   Project project
+  ContainerExtBase parent
 
-  abstract Class getKlass()
+  abstract Class<T> getKlass()
 
   @Override
   T create( String name ) {
     def ext = createInstance( name )
     project.afterEvaluate {
       assert project.state.executed
-      addTasksFor ext
+      afterEvaluate ext
     }
     ext
   }
 
-  def _( String name, Class klass, T x ) {
-    project.task( name, type: klass ) {
+  Task _( String name, Class klass, T x ) {
+    def task = project.task( name, type: klass ) {
       ext = x
     }
+//    task.inputs.property "ext", x
+    task
   }
 
-  def createInstance( String name ) {
-    klass.newInstance( name, project ) as T
+  T createInstance( String name ) {
+    klass.newInstance( name, project, parent )
   }
 
-  abstract def addTasksFor( T cert )
+  abstract def afterEvaluate( T cert )
 }
 

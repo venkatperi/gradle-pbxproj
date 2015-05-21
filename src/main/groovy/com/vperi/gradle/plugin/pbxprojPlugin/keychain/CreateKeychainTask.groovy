@@ -1,9 +1,8 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.keychain
 
-import com.vperi.gradle.tasks.TaskWithExtensionBase
+import com.vperi.gradle.extension.ResourceTaskBase
+import groovy.util.logging.Slf4j
 import org.gradle.api.tasks.TaskAction
-
-import java.nio.file.FileAlreadyExistsException
 
 /**
  * CreateKeychainTask.groovy
@@ -13,17 +12,19 @@ import java.nio.file.FileAlreadyExistsException
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-class CreateKeychainTask extends TaskWithExtensionBase<KeychainExt> {
+@Slf4j
+class CreateKeychainTask extends ResourceTaskBase<KeychainExt> {
+  @Lazy def outputFile = new File( outputDir, ext.name )
 
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   void exec() {
-    if ( !overwrite && project.file( ext.fileName ).exists() ) {
-      throw new FileAlreadyExistsException( ext.fileName )
-    }
-
-    def keychain = new OsxKeychain( ext.fileName, ext.password )
+    log.info "Creating keychain file: ${outputFile.path}"
+    def keychain = new OsxKeychain( outputFile.path, ext.password as String )
     keychain.create()
+
+    //noinspection GroovyAssignabilityCheck
+    keychain.addCertificates ext.certificates.toArray()
   }
 }
 

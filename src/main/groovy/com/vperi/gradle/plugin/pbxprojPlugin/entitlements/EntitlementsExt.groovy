@@ -1,10 +1,9 @@
-package com.vperi.gradle.plugin.pbxprojPlugin
+package com.vperi.gradle.plugin.pbxprojPlugin.entitlements
 
-import com.vperi.gradle.extension.ExtensionBase
+import com.vperi.gradle.extension.PlistExt
 import groovy.transform.InheritConstructors
-
 /**
- * PbxprojExt.groovy
+ * InfoPlistExt.groovy
  *
  * Copyright © 2015 venkat
  *
@@ -13,10 +12,6 @@ import groovy.transform.InheritConstructors
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @InheritConstructors
-class PbxprojExt extends ExtensionBase {
-
-  @Override
-  String getName() {
-    this.@name ?: project.name
-  }
+class EntitlementsExt extends PlistExt {
 }
+

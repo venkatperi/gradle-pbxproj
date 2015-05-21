@@ -1,9 +1,8 @@
 package com.vperi.gradle.extension
 
 import groovy.transform.InheritConstructors
-
 /**
- * UppercasePropertyContainer.groovy
+ * PlistExt.groovy
  *
  * Copyright © 2015 venkat
  *
@@ -12,5 +11,6 @@ import groovy.transform.InheritConstructors
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @InheritConstructors
-class UppercasePropertyContainer extends ExtensionBase {
-}
+class PlistExt extends ResourceExt {}
+
+

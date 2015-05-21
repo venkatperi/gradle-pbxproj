@@ -1,4 +1,4 @@
-package com.vperi.gradle.plugin.pbxprojPlugin.infoPlist
+package com.vperi.gradle.plugin.pbxprojPlugin.entitlements
 
 import com.vperi.gradle.extension.ExtensionFactoryBase
 import groovy.transform.Canonical
@@ -14,23 +14,20 @@ import groovy.util.logging.Slf4j
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @Canonical
 @Slf4j
-class InfoPlistFactory extends ExtensionFactoryBase<InfoPlistExt> {
-  Class klass = InfoPlistExt
+class EntitlementsFactory extends ExtensionFactoryBase<EntitlementsExt> {
+  Class klass = EntitlementsExt
 
   /**
    * Add tasks for this extension
    * @param x - the extension
    * @return
    */
-  def afterEvaluate( InfoPlistExt x ) {
-    if ( x.parent ) {
-      def t = _ "${x.parent.prefix}CreateInfoPlist", CreateInfoPlistTask, x
+  def afterEvaluate( EntitlementsExt x ) {
+    def t = _ "${x.parent.prefix}CreateEntitlementsPlist", CreateEntitlementsPlistTask, x
 
-      def addFilesTask = project.tasks.findByPath( "${x.parent.prefix}AddFiles" )
-      if ( addFilesTask ) {
-        addFilesTask.dependsOn t
-      }
+    def addFilesTask = project.tasks.findByPath( "${x.parent.prefix}AddFiles" )
+    if ( addFilesTask ) {
+      addFilesTask.dependsOn t
     }
   }
 }
-

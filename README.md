@@ -21,16 +21,26 @@ apply plugin: 'pbxproj'
     
 ## Source Sets
 
-The Java plugin introduces two source sets to the project: `main` and `test`. The Xcode plugin adds following directories to all source sets: 
+The Java plugin introduces two source sets to the project: `main` and `test`. Additional source sets are added for each target.
 
-* `src/{sourceset}/objc` for ObjectiveC code.
-* `src/{sourceset}/swift` for Swift code.
-* `src/{sourceset}/resources` for resources.
+##Project Layout
+The Xcode plugin assumes the following layout:
 
-as well as:
-* `build/gen/{sourceset}/objc` for generated Objc code.
-* `build/gen/{sourceset}/swift` for generated Swift code.
-* `build/gen/{sourceset}/resources` for generated resources.
+|Directory|Meaning|
+|---|---|---|---|---|
+|src/main/objc|ObjeciveC code. Included in all targets.|
+|src/main/swift|Swift code. Included in all targets.|
+|src/main/resources|Resources. Included in all targets.|
+|build/gen/main/objc|Generated ObjeciveC code. Included in all targets.|
+|build/gen/main/swift|Generated Swift code. Included in all targets.|
+|build/gen/main/resources|Generated resources. Included in all targets.|
+|src/{target}/objc|ObjeciveC code. Included in all targets.|
+|src/{target}/swift|Swift code. Included only in {target}|
+|src/{target}/resources|Resources. Included only in {target}|
+|build/gen/{target}/objc|Generated ObjeciveC code. Included only in {target}|
+|build/gen/{target}/swift|Generated Swift code. Included only in {target}|
+|build/gen/{target}/resources|Generated resources. Included only in {target}|
+
 
 ## Targets
 Xcode build targets can be added to the project using the `targets` block:

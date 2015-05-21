@@ -1,12 +1,15 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.target
 
-import com.vperi.gradle.extension.ExtensionBase
+import com.vperi.gradle.extension.ContainerExtBase
+import com.vperi.gradle.plugin.pbxprojPlugin.entitlements.EntitlementsExt
+import com.vperi.gradle.plugin.pbxprojPlugin.entitlements.EntitlementsFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.infoPlist.InfoPlistExt
 import com.vperi.gradle.plugin.pbxprojPlugin.infoPlist.InfoPlistFactory
 import com.vperi.xcodeproj.Language
 import com.vperi.xcodeproj.Platform
 import com.vperi.xcodeproj.TargetType
 import groovy.transform.InheritConstructors
+import groovy.transform.ToString
 
 /**
  * TargetExt.groovy
@@ -18,15 +21,38 @@ import groovy.transform.InheritConstructors
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @InheritConstructors
-class TargetExt extends ExtensionBase {
-  TargetType type
-  Platform platform
-  Language language
-  String deploymentTarget
-  String buildConfiguration
-  @Lazy InfoPlistExt infoPlist = new InfoPlistFactory( project: project, target: this ).create( "${name}InfoPlist" )
+@ToString( includePackage = false, includeNames = true )
+class TargetExt extends ContainerExtBase {
 
-  def infoPlist( Closure c ) {
-    project.configure infoPlist, c
+  @Override
+  String getPrefix() {
+    "target${name.capitalize()}"
+  }
+
+  @Override
+  Map getDefaultProperties() {
+    [ type: TargetType.Application,
+        platform: Platform.Osx,
+        language: Language.Swift,
+        deploymentTarget: "",
+        buildConfiguration: "Debug",
+        systemFrameworks: [ ]
+    ]
+  }
+
+  @Override
+  EntitlementsExt createEntitlements() {
+    def x = new EntitlementsFactory(
+        project: project, parent: this ).create( "${name}Entitlements" )
+    x.logicalParent = parent.entitlements
+    x
+  }
+
+  @Override
+  InfoPlistExt createInfoPlist() {
+    def x = new InfoPlistFactory(
+        project: project, parent: this ).create( "${name}InfoPlist" )
+    x.logicalParent = parent.infoPlist
+    x
   }
 }

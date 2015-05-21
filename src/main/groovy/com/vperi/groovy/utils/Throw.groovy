@@ -1,5 +1,7 @@
 package com.vperi.groovy.utils
 
+import org.apache.commons.lang.NotImplementedException
+
 /**
  * Throw.groovy
  *
@@ -12,5 +14,9 @@ class Throw {
 
   static def "if"( boolean condition, String message ) {
     if ( condition ) throw new Exception( message )
+  }
+
+  static def notImplemented( String message ) {
+    throw new NotImplementedException( message )
   }
 }

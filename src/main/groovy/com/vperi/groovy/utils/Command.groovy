@@ -2,7 +2,6 @@ package com.vperi.groovy.utils
 
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
-
 /**
  * Command.groovy
  *
@@ -18,19 +17,42 @@ public class Command {
   File workingDir
   List env = null
 
+  /**
+   * Executes a shell command and returns the exit code and output
+   *
+   * Options is a map of the form [name:value] expands to --name value or -n value
+   *  depending on the length of the name (single letter name == 1 dash)
+   *
+   * @param command -- the command
+   * @param options -- options map
+   * @param args -- trailing args
+   * @return array , [exitCode, output]
+   */
   public String exec( String command, Map options, String... args ) {
     exec command, options, args.toList()
   }
 
+  /**
+   *
+   * @param command
+   * @param options
+   * @param args
+   * @return
+   */
   public String exec( String command, Map options, List args ) {
     def cmd = [ executable, command ]
-    cmd.addAll options.collect { k, v -> "${dash k}$k $v" }
+    cmd.addAll options.collect { k, v -> "${dash k as String}$k $v" }
     cmd.addAll args
     def ( ret, output ) = Helper.exec( cmd.join( " " ), env, workingDir )
     if ( ret ) throw new RuntimeException( output as String )
     output
   }
 
+  /**
+   *
+   * @param args
+   * @return
+   */
   public String exec( String... args ) {
     def cmd = [ executable ]
     cmd.addAll args
@@ -46,36 +68,34 @@ public class Command {
   class Helper {
 
     static def exec( final String cmd, List<String> env, File workingDir ) throws IOException, InterruptedException {
-      log.info "Executing command: $cmd (working dir $workingDir"
-      def bout = new ByteArrayOutputStream()
+      log.info "exec: $cmd\nworking dir: $workingDir"
+      def stream = new ByteArrayOutputStream()
       def process = Runtime.runtime.exec( cmd, env as String[], workingDir )
 
-      def inp = null
-      def err = null
-      def out = null
+      def stdout = null
+      def stderr = null
       int retVal = 0
       try {
         int c
-        inp = process.inputStream
-        err = process.errorStream
-        out = process.outputStream
+        stdout = process.inputStream
+        stderr = process.errorStream
 
-        while ( ( c = inp.read() ) != -1 ) {
-          bout.write( c )
+        while ( ( c = stdout.read() ) != -1 ) {
+          stream.write( c )
         }
-        while ( ( c = err.read() ) != -1 ) {
-          bout.write( c )
+        while ( ( c = stderr.read() ) != -1 ) {
+          stream.write( c )
         }
         retVal = process.waitFor()
       }
       finally {
-        close( inp, out, err )
+        close( stdout, stderr )
       }
-      [ retVal, bout.toString() ]
+      [ retVal, stream.toString() ]
     }
 
     private static void close( final Closeable... closeables ) {
-      closeables.each { c ->
+      closeables.each { Closeable c ->
         try {
           c.close()
         }

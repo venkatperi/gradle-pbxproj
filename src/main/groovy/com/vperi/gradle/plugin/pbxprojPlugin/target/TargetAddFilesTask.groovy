@@ -1,4 +1,5 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.target
+
 import com.vperi.gradle.tasks.XcodeProjTaskBase
 import com.vperi.groovy.utils.StringExtension
 import com.vperi.xcodeproj.BuildPhase
@@ -6,6 +7,7 @@ import groovy.util.logging.Slf4j
 import org.gradle.api.file.FileTree
 import org.gradle.api.file.FileVisitDetails
 import org.gradle.api.tasks.TaskAction
+
 /**
  * CreateTargetTask.groovy
  *
@@ -23,26 +25,24 @@ class TargetAddFilesTask extends XcodeProjTaskBase<TargetExt> {
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   void exec() {
-    ext.with {
-      Map<String, List<String>> files = [ : ]
-      def targetName = ext.name
+    Map<String, List<String>> files = [ : ]
+    def targetName = ext.name
 
-      [ "main", targetName ].each { configName ->
-        def config = project.sourceSets."$configName"
-        [ "objc", "swift", "resources" ].each {
-          files.putAll getFileList( config."$it" )
-        }
+    [ "main", targetName ].each { configName ->
+      def config = project.sourceSets."$configName"
+      [ "objc", "swift", "resources" ].each {
+        files.putAll getFileList( config."$it" )
       }
+    }
 
-      files.each { k, v ->
-        def phase = k.contains( "resources" ) ? BuildPhase.Resources : BuildPhase.Sources
-        xproj.addFilesToTarget name, k, phase, v
-      }
+    files.each { k, v ->
+      def phase = k.contains( "resources" ) ? BuildPhase.Resources : BuildPhase.Sources
+      xproj.addFilesToTarget ext.name, k, phase, v
+    }
 
-      if ( infoPlistFile ) {
-        log.info "target: $ext.name, Info.plist: $infoPlistFile"
-        xproj.buildSetting( name, buildConfiguration, "INFOPLIST_FILE", infoPlistFile )
-      }
+    if ( infoPlistFile ) {
+      log.info "target: $ext.name, Info.plist: $infoPlistFile"
+      xproj.buildSetting( ext.name, ext.buildConfiguration, "INFOPLIST_FILE", infoPlistFile )
     }
   }
 

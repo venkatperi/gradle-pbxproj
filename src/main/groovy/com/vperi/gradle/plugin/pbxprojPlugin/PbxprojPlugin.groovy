@@ -4,6 +4,7 @@ import com.vperi.gradle.plugin.pbxprojPlugin.cert.CertificateExt
 import com.vperi.gradle.plugin.pbxprojPlugin.cert.CertificateFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.keychain.KeychainExt
 import com.vperi.gradle.plugin.pbxprojPlugin.keychain.KeychainFactory
+import com.vperi.gradle.plugin.pbxprojPlugin.project.ProjectExtFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetFactory
 import com.vperi.gradle.tasks.CreatePbxprojTask
@@ -34,15 +35,17 @@ class PbxprojPlugin implements Plugin<Project> {
     configureSourceSets()
     configureSourceSetDefaults( "objc", DefaultObjcSourceSet )
     configureSourceSetDefaults( "swift", DefaultSwiftSourceSet )
-    createDomainObjects()
     createExtensions()
+    createDomainObjects()
     createTasks()
   }
 
   def createDomainObjects() {
+    def projExt = project.extensions.project
+
     project.with {
       [
-          targets: [ TargetExt, new TargetFactory( project: project ) ],
+          targets: [ TargetExt, new TargetFactory( project: project, parent: projExt ) ],
           keychains: [ KeychainExt, new KeychainFactory( project: project ) ],
           certificates: [ CertificateExt, new CertificateFactory( project: project ) ],
       ].each {
@@ -54,6 +57,7 @@ class PbxprojPlugin implements Plugin<Project> {
   }
 
   def createExtensions() {
+    project.extensions.add( "project", new ProjectExtFactory( project: project ).create( "project" ) )
   }
 
   def createTasks() {

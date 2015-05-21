@@ -1,6 +1,7 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.keychain
 
-import com.vperi.gradle.extension.ExtensionBase
+import com.vperi.gradle.extension.ResourceExt
+import com.vperi.groovy.utils.IdentifierGenerator
 import groovy.transform.InheritConstructors
 
 /**
@@ -13,20 +14,14 @@ import groovy.transform.InheritConstructors
  */
 @InheritConstructors
 @SuppressWarnings( "GroovyUnusedDeclaration" )
-class KeychainExt extends ExtensionBase {
-  String password
-  boolean overwrite = false
+class KeychainExt extends ResourceExt {
 
-  def getFileName() {
-    file( "keychain" )
-  }
-
-  def password( String p ) {
-    this.password = p
-  }
-
-  def overwrite( boolean b ) {
-    this.overwrite = b
+  @Override
+  Map getDefaultProperties() {
+    [
+        password: new IdentifierGenerator().next(),
+        certificates: []
+    ]
   }
 }
 
