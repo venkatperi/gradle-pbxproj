@@ -38,7 +38,7 @@ class XcodeProj {
 
   private def exec( String cmd, Map options, String... args ) {
     def s = script( "xcodeproj" ).path
-    command.exec "$s $cmd", options, args
+    command.exec "$s $cmd", options, args.toList()
   }
 
   /**

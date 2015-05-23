@@ -15,7 +15,8 @@ class KeychainFactory extends ExtensionFactoryBase<KeychainExt> {
   Class klass = KeychainExt
 
   def afterEvaluate( KeychainExt ext ) {
-    _ "${ext.parent.prefix}CreateKeychain", CreateKeychainTask, ext
+    def t = _ "${ext.parent.prefix}CreateKeychain", CreateKeychainTask, ext
+    getOrCreateTask( "targets" ).dependsOn t
   }
 }
 

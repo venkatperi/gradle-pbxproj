@@ -12,5 +12,6 @@ import com.vperi.gradle.tasks.TaskWithExtensionBase
  */
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 abstract class ResourceTaskBase<T extends ResourceExt> extends TaskWithExtensionBase<T> {
-  @Lazy def outputDir = project.file( "build/gen/${ext.parent.name}/resources" )
+  @Lazy def outputDir = project.file( "build/gen/${ext.parent.outputDir}/resources" )
+  @Lazy def allTasksName = ext.parent.prefix
 }

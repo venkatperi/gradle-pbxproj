@@ -31,11 +31,19 @@ abstract class ExtensionFactoryBase<T extends ExtensionBase> implements NamedDom
     ext
   }
 
+  Task getOrCreateTask( String name, Class klass ) {
+    project.tasks.findByName( name ) ?: project.task( name, type: klass )
+  }
+
+  Task getOrCreateTask( String name ) {
+    project.tasks.findByName( name ) ?: project.task( name )
+  }
+
   Task _( String name, Class klass, T x ) {
     def task = project.task( name, type: klass ) {
       ext = x
     }
-//    task.inputs.property "ext", x
+    task.inputs.property "ext", x
     task
   }
 

@@ -16,6 +16,12 @@ import groovy.transform.InheritConstructors
 @SuppressWarnings( "GroovyUnusedDeclaration" )
 @InheritConstructors
 public class ProjectExt extends ContainerExtBase {
+
+  @Override
+  String getOutputDir() {
+    "main"
+  }
+
   @Override
   String getPrefix() {
     "project${name.capitalize()}"

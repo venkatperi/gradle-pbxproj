@@ -1,6 +1,7 @@
-package com.vperi.gradle.tasks
+package com.vperi.gradle.plugin.pbxprojPlugin.project
 
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
+import com.vperi.gradle.tasks.XcodeProjTaskBase
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -17,8 +18,6 @@ class CreatePbxprojTask extends XcodeProjTaskBase<TargetExt> {
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   def exec() {
-    if ( !xproj.projectDir.exists() ) {
-      xproj.createProject()
-    }
+    xproj.createProject()
   }
 }

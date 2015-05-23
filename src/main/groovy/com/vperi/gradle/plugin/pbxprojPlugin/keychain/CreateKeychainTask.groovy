@@ -1,9 +1,7 @@
 package com.vperi.gradle.plugin.pbxprojPlugin.keychain
-
 import com.vperi.gradle.extension.ResourceTaskBase
 import groovy.util.logging.Slf4j
 import org.gradle.api.tasks.TaskAction
-
 /**
  * CreateKeychainTask.groovy
  *
@@ -19,12 +17,18 @@ class CreateKeychainTask extends ResourceTaskBase<KeychainExt> {
   @SuppressWarnings( "GroovyUnusedDeclaration" )
   @TaskAction
   void exec() {
-    log.info "Creating keychain file: ${outputFile.path}"
-    def keychain = new OsxKeychain( outputFile.path, ext.password as String )
+    def name = "${outputFile.path}.keychain"
+    def keychain = new OsxKeychain( name, ext.password as String )
     keychain.create()
+    keychain.unlock()
 
-    //noinspection GroovyAssignabilityCheck
-    keychain.addCertificates ext.certificates.toArray()
+    if ( ext.certificates.size() ) {
+      keychain.addCertificates ext.certificates
+    }
+
+    ext.imports.each {
+      keychain.importItem it.key as String, it.value as String, null, null
+    }
   }
 }
 

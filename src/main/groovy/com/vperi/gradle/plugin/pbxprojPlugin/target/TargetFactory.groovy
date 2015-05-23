@@ -22,9 +22,15 @@ class TargetFactory extends ExtensionFactoryBase<TargetExt> {
   def afterEvaluate( TargetExt x ) {
     def createTask = _ "${x.prefix}Create", CreateTargetTask, x
     def addFilesTask = _ "${x.prefix}AddFiles", TargetAddFilesTask, x
+    def buildTask = _ "${x.prefix}Build", BuildTargetTask, x
 
     addFilesTask.dependsOn createTask
-    project.tasks[ "targets" ].dependsOn addFilesTask
+    buildTask.dependsOn addFilesTask
+
+    def targetTask = getOrCreateTask x.prefix
+    targetTask.dependsOn buildTask
+
+    getOrCreateTask( "targets" ).dependsOn targetTask
 
     configureSourceSets x.name
   }

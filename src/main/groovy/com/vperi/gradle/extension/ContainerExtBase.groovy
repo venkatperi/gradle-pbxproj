@@ -18,6 +18,8 @@ abstract class ContainerExtBase extends ExtensionBase {
 
   abstract String getPrefix()
 
+  String getOutputDir() { name }
+
   @Lazy InfoPlistExt infoPlist = createInfoPlist()
 
   @Lazy EntitlementsExt entitlements = createEntitlements()

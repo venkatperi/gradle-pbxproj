@@ -20,7 +20,8 @@ class KeychainExt extends ResourceExt {
   Map getDefaultProperties() {
     [
         password: new IdentifierGenerator().next(),
-        certificates: []
+        certificates: [ ],
+        imports: [ ]
     ]
   }
 }

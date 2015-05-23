@@ -24,10 +24,6 @@ class EntitlementsFactory extends ExtensionFactoryBase<EntitlementsExt> {
    */
   def afterEvaluate( EntitlementsExt x ) {
     def t = _ "${x.parent.prefix}CreateEntitlementsPlist", CreateEntitlementsPlistTask, x
-
-    def addFilesTask = project.tasks.findByPath( "${x.parent.prefix}AddFiles" )
-    if ( addFilesTask ) {
-      addFilesTask.dependsOn t
-    }
+    getOrCreateTask( x.parent.prefix ).dependsOn t
   }
 }

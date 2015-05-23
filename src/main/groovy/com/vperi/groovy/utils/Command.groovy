@@ -1,7 +1,7 @@
 package com.vperi.groovy.utils
 
-import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
+
 /**
  * Command.groovy
  *
@@ -10,12 +10,12 @@ import groovy.util.logging.Slf4j
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
-@TupleConstructor
 @Slf4j
 public class Command {
   String executable
   File workingDir
   List env = null
+  boolean singleDash
 
   /**
    * Executes a shell command and returns the exit code and output
@@ -50,6 +50,26 @@ public class Command {
 
   /**
    *
+   * @param options
+   * @param args
+   * @return
+   */
+  public String exec( Map options, List args ) {
+    exec "", options, args
+  }
+
+  /**
+   *
+   * @param options
+   * @param args
+   * @return
+   */
+  public String exec( Map options, String... args ) {
+    exec options, args.toList()
+  }
+
+  /**
+   *
    * @param args
    * @return
    */
@@ -61,8 +81,8 @@ public class Command {
     output
   }
 
-  private static String dash( String name ) {
-    name.length() <= 1 ? "-" : "--"
+  private String dash( String name ) {
+    singleDash || name.length() <= 1 ? "-" : "--"
   }
 
   class Helper {

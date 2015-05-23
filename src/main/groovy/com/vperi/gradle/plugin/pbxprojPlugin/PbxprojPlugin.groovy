@@ -7,7 +7,7 @@ import com.vperi.gradle.plugin.pbxprojPlugin.keychain.KeychainFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.project.ProjectExtFactory
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetExt
 import com.vperi.gradle.plugin.pbxprojPlugin.target.TargetFactory
-import com.vperi.gradle.tasks.CreatePbxprojTask
+import com.vperi.gradle.plugin.pbxprojPlugin.project.CreatePbxprojTask
 import com.vperi.groovy.utils.ResourceUtils
 import groovy.util.logging.Slf4j
 import org.gradle.api.NamedDomainObjectFactory
@@ -46,8 +46,8 @@ class PbxprojPlugin implements Plugin<Project> {
     project.with {
       [
           targets: [ TargetExt, new TargetFactory( project: project, parent: projExt ) ],
-          keychains: [ KeychainExt, new KeychainFactory( project: project ) ],
-          certificates: [ CertificateExt, new CertificateFactory( project: project ) ],
+          keychains: [ KeychainExt, new KeychainFactory( project: project, parent: projExt ) ],
+          certificates: [ CertificateExt, new CertificateFactory( project: project, parent: projExt ) ],
       ].each {
         extensions."$it.key" = container(
             it.value[ 0 ] as Class,
