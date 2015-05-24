@@ -40,9 +40,10 @@ class TargetAddFilesTask extends XcodeProjTaskBase<TargetExt> {
       xproj.addFilesToTarget ext.name, k, phase, v
     }
 
-    if ( infoPlistFile ) {
-      log.info "target: $ext.name, Info.plist: $infoPlistFile"
-      xproj.buildSetting( ext.name, ext.buildConfiguration, "INFOPLIST_FILE", infoPlistFile )
+    assert infoPlistFile, "No Info.plist found in source sets"
+    log.info "target: $ext.name, Info.plist: $infoPlistFile"
+    ext.buildConfigurations.each {
+      xproj.buildSetting( ext.name, it, "INFOPLIST_FILE", infoPlistFile )
     }
   }
 

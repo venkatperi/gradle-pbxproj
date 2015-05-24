@@ -27,7 +27,7 @@ interface Keychain {
    * Sets the keychain password
    * @param password
    */
-  void setPassword( String password )
+  Keychain setPassword( String password )
 
   /**
    * Returns the keychain password
@@ -38,17 +38,17 @@ interface Keychain {
   /**
    * Create keychain
    */
-  void create()
+  Keychain create()
 
   /**
    *  Lock keychain
    */
-  void lock()
+  Keychain lock()
 
   /**
    * Unlock keychain
    */
-  void unlock()
+  Keychain unlock()
 
   /**
    * Set settings for keychain
@@ -57,7 +57,7 @@ interface Keychain {
    *    lockAfterTimeout (value, in seconds)
    * @param value
    */
-  void set( String name, Object value )
+  Keychain set( String name, Object value )
 
   /**
    * Get keychain settings
@@ -71,21 +71,21 @@ interface Keychain {
    * The files must contain one DER encoded X509 certificate each.
    * @param files
    */
-  void addCertificates( String... files )
+  Keychain addCertificates( List files )
 
   /**
    * Delete a certificate from a keychain specified by its common name
    * @param name
    * @param deleteUserTrustSettings
    */
-  void deleteCertificateByName( String name, boolean deleteUserTrustSettings )
+  Keychain deleteCertificateByName( String name, boolean deleteUserTrustSettings )
 
   /**
    * Delete a certificate from a keychain specified by its SHA-1 hash
    * @param hash
    * @param deleteUserTrustSettings
    */
-  void deleteCertificateByHash( String hash, boolean deleteUserTrustSettings )
+  Keychain deleteCertificateByHash( String hash, boolean deleteUserTrustSettings )
 
   /**
    * Imports one or more items from `inputFile` into this keychain.
@@ -100,7 +100,20 @@ interface Keychain {
    *    pkcs12, x509, openssh1, openssh2, and pemseq. The command can often figure
    *    out what format an item is in based in the filename and/or item_type.
    */
-  void importItem( String inputFile, String passphrase, String type, String format)
-//      boolean privateKeysAreWrapped, boolean privateKeysAreNonExtractable, boolean allowAnyApp, List<String> allowedApps, Map attribs )
+  Keychain importItem( String inputFile, String passphrase, String type, String format )
+
+  //      boolean privateKeysAreWrapped, boolean privateKeysAreNonExtractable, boolean allowAnyApp, List<String> allowedApps, Map attribs )
+
+  /**
+   *  Find an identity (certificate + private key) satisfying a given policy.
+   *  If no policy arguments are provided, the X.509 basic policy is assumed.
+   * @param policy - Specify policy to evaluate.
+   *    Supported policies: basic, ssl-client, ssl-server, smime, eap, ipsec,
+   *    ichat, codesigning, sys-default, sys-kerberos-kdc
+   * @param policySpecific - optional policy-specific string
+   * @param validOnly - only valid identities
+   * @return
+   */
+  String findIdentity( String policy, String policySpecific, boolean validOnly )
 }
 

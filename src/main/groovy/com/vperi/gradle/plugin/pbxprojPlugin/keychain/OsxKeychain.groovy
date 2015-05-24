@@ -29,33 +29,36 @@ public class OsxKeychain implements Keychain {
     this.password = password
   }
 
-  void create() {
+  Keychain create() {
     log.info( "create keychain: $fileName" )
     assert password, "Password can't be null"
     exec "create-keychain", [ p: password ], fileName
+    this
   }
 
   @Override
-  void lock() {
+  Keychain lock() {
     log.info( "lock keychain: $fileName" )
     exec "lock-keychain", [ : ], fileName
+    this
   }
 
   @Override
-  void unlock() {
+  Keychain unlock() {
     log.info( "unlock keychain: $fileName" )
     exec "unlock-keychain", [ p: password ], fileName
+    this
   }
 
   @Override
-  void set( String name, Object value ) {
+  Keychain set( String name, Object value ) {
     def options = [ : ]
     switch ( name ) {
       case 'lockOnSleep':
-        options.lockOnSleep = ""
+        options.l = ""
         break
       case 'lockAfterTimeout':
-        options.lockAfterTimeout = ""
+        options.u = ""
         options.t = value
         break
       default:
@@ -64,14 +67,16 @@ public class OsxKeychain implements Keychain {
 
     log.info( "set props: $fileName, $name, $value" )
     exec "set-keychain-settings", options, fileName
+    this
   }
 
-  void setPassword( String password ) {
+  Keychain setPassword( String password ) {
     if ( this.password ) {
       //don't set on first init
       exec "set-keychain-password", [ o: this.password, p: password ], fileName
       this.password = password
     }
+    this
   }
 
   @Override
@@ -80,25 +85,26 @@ public class OsxKeychain implements Keychain {
   }
 
   @Override
-  void addCertificates( String... files ) {
+  Keychain addCertificates( List files ) {
     def items = files.collect { strip it }
     log.info( "add certificates: $fileName, $items" )
     exec "add-certificates", [ k: fileName ], items
+    this
   }
 
   @Override
-  void deleteCertificateByName( String name, boolean deleteUserTrustSettings ) {
+  Keychain deleteCertificateByName( String name, boolean deleteUserTrustSettings ) {
     Throw.notImplemented "deleteCertificateByName"
   }
 
   @Override
-  void deleteCertificateByHash( String hash, boolean deleteUserTrustSettings ) {
+  Keychain deleteCertificateByHash( String hash, boolean deleteUserTrustSettings ) {
     Throw.notImplemented "deleteCertificateByHash"
   }
 
   @Override
-  void importItem( String inputFile, String passphrase, String type, String format ) {
-    def options = [ P: passphrase ]
+  Keychain importItem( String inputFile, String passphrase, String type, String format ) {
+    def options = [ k: fileName, P: passphrase ]
     if ( type ) {
       options.t = type
     }
@@ -108,9 +114,27 @@ public class OsxKeychain implements Keychain {
 
     def f = strip inputFile
     exec "import $f", options
+    this
   }
 
-  private static String strip(String str){
+  @Override
+  String findIdentity( String policy, String policySpecific, boolean validOnly ) {
+    def options = [ : ]
+    if ( policy ) {
+      options.p = policy
+    }
+
+    if ( policySpecific ) {
+      options.s = policySpecific
+    }
+
+    if ( validOnly ) {
+      options.v = ""
+    }
+    exec "find-identity", options, fileName
+  }
+
+  private static String strip( String str ) {
     StringUtils.removePrefix( str, "file://" )
   }
 

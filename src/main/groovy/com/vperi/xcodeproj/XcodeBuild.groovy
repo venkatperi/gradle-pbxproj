@@ -14,6 +14,7 @@ import groovy.transform.Memoized
 class XcodeBuild {
   def command = new Command( executable: "xcodebuild", singleDash: true )
   String projectName
+  boolean codeSignWhenBuilding = false
 
   void setWorkingDir( File wd ) {
     command.workingDir = wd
@@ -58,7 +59,32 @@ class XcodeBuild {
    * @param targetName
    * @return
    */
-  def buildTarget( String targetName ) {
-    command.exec project: projectName, target: targetName, "build"
+  def buildTarget( String targetName, String configuration ) {
+    assert targetName, "no target name?"
+    assert configuration, "no build configuration?"
+
+    def options = [
+        project: projectName,
+        target: targetName,
+        configuration: configuration
+    ]
+
+    def args = [ "build" ]
+
+    def config = [
+        CODE_SIGNING_REQUIRED: yesNo( codeSignWhenBuilding )
+    ]
+
+    if ( !codeSignWhenBuilding ) {
+      config[ "CODE_SIGN_IDENTITY" ] = ""
+    }
+
+    args.addAll config.collect { k, v -> "$k=$v" }
+
+    command.exec options, args
+  }
+
+  static String yesNo( boolean val ) {
+    val ? "YES" : "NO"
   }
 }

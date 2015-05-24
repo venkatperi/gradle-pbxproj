@@ -15,6 +15,8 @@ import org.gradle.api.tasks.TaskAction
 class BuildTargetTask extends XcodeProjTaskBase<TargetExt> {
   @TaskAction
   def exec() {
-    builder.buildTarget ext.name
+    ext.buildConfigurations.each {
+      builder.buildTarget ext.name, it
+    }
   }
 }

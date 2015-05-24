@@ -23,10 +23,9 @@ class InfoPlistFactory extends ExtensionFactoryBase<InfoPlistExt> {
    * @return
    */
   def afterEvaluate( InfoPlistExt x ) {
-    if ( x.parent ) {
-      def t = _ "${x.parent.prefix}CreateInfoPlist", CreateInfoPlistTask, x
-      getOrCreateTask( x.parent.prefix ).dependsOn t
-    }
+    assert x.parent, "No parent?"
+    def t = _ "${x.parent.prefix}CreateInfoPlist", CreateInfoPlistTask, x
+    getOrCreateTask( "${x.parent.prefix}AddFiles" ).dependsOn t
   }
 }
 

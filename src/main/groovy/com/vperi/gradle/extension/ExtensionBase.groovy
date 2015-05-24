@@ -2,6 +2,7 @@ package com.vperi.gradle.extension
 
 import com.vperi.groovy.utils.ObjectExt
 import groovy.transform.Memoized
+import groovy.util.logging.Slf4j
 import org.gradle.api.Project
 
 /**
@@ -12,6 +13,7 @@ import org.gradle.api.Project
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
  */
+@Slf4j(category = "ExtensionBase")
 public class ExtensionBase {
   public final String name
   public final Project project
@@ -61,12 +63,16 @@ public class ExtensionBase {
   String getBaseName() {
     def name = this.class.simpleName.toLowerCase()
     def ext = [ "ext", "extension" ].find { name.endsWith it }
-    ext ? name.substring( 0, name.length() - ext.length() ) : name
+    def n = ext ? name.substring( 0, name.length() - ext.length() ) : name
+    log.debug "baseName: $n"
+    n
   }
 
   @Memoized
   def getBaseDir() {
-    project.file( "build/$baseName" )
+    def d = project.file( "build/$baseName" )
+    log.debug "baseDir: $d"
+    d
   }
 
   String file( String ext ) {
@@ -74,20 +80,23 @@ public class ExtensionBase {
   }
 
   def methodMissing( String name, args ) {
+    log.debug "method missing: $name, $args, ${args.class}, ${properties[ name ]}"
     if ( ObjectExt.isCollectionOrArray( properties[ name ] ) ) {
       properties[ name ].addAll args
     } else if ( args.size() > 1 ) {
-      properties.put name, args
+      properties.put name, args.toList()
     } else {
       properties.put name, args[ 0 ]
     }
   }
 
   def propertyMissing( String name ) {
+    log.debug "propertyMissing: $name"
     mergedProperties.get name
   }
 
   def propertyMissing( String name, Object val ) {
+    log.debug "propertyMissing: $name, $val"
     this.@properties.put( name, val )
   }
 

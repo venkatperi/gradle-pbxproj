@@ -1,4 +1,5 @@
 package com.vperi.groovy.utils
+
 /**
  * ObjectExt.groovy
  *
@@ -10,5 +11,9 @@ package com.vperi.groovy.utils
 public class ObjectExt {
   public static boolean isCollectionOrArray( object ) {
     [ Collection, Object[ ] ].any { it.isAssignableFrom( object.getClass() ) }
+  }
+
+  public static boolean isMap( object ) {
+    [ Map ].any { it.isAssignableFrom( object.getClass() ) }
   }
 }

@@ -35,7 +35,7 @@ class TargetExt extends ContainerExtBase {
         platform: Platform.Osx,
         language: Language.Swift,
         deploymentTarget: "",
-        buildConfiguration: "Debug",
+        buildConfigurations: [ "Debug", "Release" ],
         systemFrameworks: [ ]
     ]
   }
